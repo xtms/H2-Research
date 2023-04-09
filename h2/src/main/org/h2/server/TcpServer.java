@@ -288,9 +288,9 @@ public class TcpServer implements Service {
         stopManagementDb();
     }
     
-    //测试是否在本地连得上TcpServer，此时listen()已经执行了
-    //这个方法会触发建立一个TcpServerThread，
-    //不过很快就关掉了，因为没有建立Session对象，也没在SESSIONS表中存入记录。
+    // 测试是否在本地连得上TcpServer，此时listen()已经执行了
+    // 这个方法会触发建立一个TcpServerThread，
+    // 不过很快就关掉了，因为没有建立Session对象，也没在SESSIONS表中存入记录。
     @Override
     public synchronized boolean isRunning(boolean traceError) {
         if (serverSocket == null) {

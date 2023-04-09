@@ -316,8 +316,8 @@ public class Server extends Tool implements Runnable, ShutdownHandler {
         }
         try {
             if (tcpStart) {
-                tcp = createTcpServer(args); // 创建服务
-                tcp.start(); // 启动服务
+                tcp = createTcpServer(args); // 创建Runnable服务, 实现多线程操作
+                tcp.start(); // 启动服务，调用本Server中的Start方法。
                 out.println(tcp.getStatus());  //打印服务状态
                 tcp.setShutdownHandler(this); // 设置关闭处理函数？在创建Tcp已经塞了一次，为什么外边又要塞一次？有单独调用CreateTcpServer方法的地方，怕遗漏？
                 // 或者赛入的不是同一个Server？
@@ -510,16 +510,26 @@ public class Server extends Tool implements Runnable, ShutdownHandler {
     public Server start() throws SQLException { // 服务启动入口
         try {
             started = true;
-            service.start(); // 各个实现Service的Start方法，比如TcpServer.start()、WebServer.start()
+            service.start(); // 各个实现Service的Start方法，比如TcpServer.start()、WebServer.start()。
+            // TcpServer.start 做socket链接创建等操作...
+
             String url = service.getURL();
+            System.out.println("Start Url: "+ url);
             int idx = url.indexOf('?');
             if (idx >= 0) {
                 url = url.substring(0, idx);
             }
             String name = service.getName() + " (" + url + ')';
-            Thread t = new Thread(this, name);
+            Thread t = new Thread(this, name); // 单独的线程进程处理当前的Server
             t.setDaemon(service.isDaemon());
+            /**
+             * 此线程启动和外围的tcp.start关系？
+             * tcp只是单纯调用start 方法， 此处是Runnable线程的启动，实际执行Runnable中的run方法. 此处启动就是外边调用的Server（tcp、web、pg）
+             * 最终下钻到Service实现方法的{@link TcpServer#listen()}
+             *
+             */
             t.start();
+
             for (int i = 1; i < 64; i += i) {
                 wait(i);
                 if (isRunning(false)) {

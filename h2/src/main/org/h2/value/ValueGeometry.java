@@ -5,20 +5,20 @@
  */
 package org.h2.value;
 
-import static org.h2.util.geometry.EWKBUtils.EWKB_SRID;
-
 import org.h2.api.ErrorCode;
 import org.h2.message.DbException;
 import org.h2.util.Bits;
 import org.h2.util.StringUtils;
 import org.h2.util.geometry.EWKBUtils;
 import org.h2.util.geometry.EWKTUtils;
+import org.h2.util.geometry.EWKTUtils.EWKTTarget;
 import org.h2.util.geometry.GeometryUtils;
 import org.h2.util.geometry.GeometryUtils.EnvelopeAndDimensionSystemTarget;
 import org.h2.util.geometry.GeometryUtils.EnvelopeTarget;
 import org.h2.util.geometry.JTSUtils;
-import org.h2.util.geometry.EWKTUtils.EWKTTarget;
 import org.locationtech.jts.geom.Geometry;
+
+import static org.h2.util.geometry.EWKBUtils.EWKB_SRID;
 
 /**
  * Implementation of the GEOMETRY data type.

@@ -126,7 +126,7 @@
 
   <!-- The test code creates proxy files using javac or tools.jar. Through maven we need to tell it
        where to possibly find tools.jar and annoyingly its called classes.jar on OSX -->
-  <profiles>
+  <!--<profiles>
     <profile>
       <id>jigsaw-jdk</id>
       <activation>
@@ -168,7 +168,7 @@
         </dependency>
       </dependencies>
     </profile>
-  </profiles>
+  </profiles>-->
 
   <build>
     <sourceDirectory>src/main</sourceDirectory>
