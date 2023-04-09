@@ -47,7 +47,7 @@ public class NetUtils {
         try {
             return createSocket(local, port, ssl);
         } catch (IOException e) {
-            try {
+            try { // 出异常,用“localhost 重试一次”
                 return createSocket("localhost", port, ssl);
             } catch (IOException e2) {
                 // throw the original exception

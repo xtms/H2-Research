@@ -509,17 +509,19 @@ public class Server extends Tool implements Runnable, ShutdownHandler {
      */
     public Server start() throws SQLException { // 服务启动入口
         try {
+            Thread thread = Thread.currentThread();
+
             started = true;
             service.start(); // 各个实现Service的Start方法，比如TcpServer.start()、WebServer.start()。
             // TcpServer.start 做socket链接创建等操作...
 
             String url = service.getURL();
-            System.out.println("Start Url: "+ url);
             int idx = url.indexOf('?');
             if (idx >= 0) {
                 url = url.substring(0, idx);
             }
             String name = service.getName() + " (" + url + ')';
+            System.out.println("name----->"+name);
             Thread t = new Thread(this, name); // 单独的线程进程处理当前的Server
             t.setDaemon(service.isDaemon());
             /**

@@ -266,19 +266,32 @@ public class TcpServer implements Service {
         listenerThread = Thread.currentThread();
         String threadName = listenerThread.getName();
         try {
-            while (!stop) {
-                Socket s = serverSocket.accept();
+            while (!stop) { // 不断循环, 触发点是什么？ 服务启动就有两个线程？
+                // 不断接收客户端的sql请求
+               // System.out.println("stop------>"+ stop);
+                Thread maiTread = Thread.currentThread();
+                // System.out.println("mainThread: "+ maiTread.getName()+" "+ maiTread.getId());
+                Socket s = serverSocket.accept(); // 接收外来sql的请求
                 //s.setSoTimeout(2000); //我加上的
                 Utils10.setTcpQuickack(s, true);
                 int id = nextThreadId++;
+                // 创建 TcpServerThread
                 TcpServerThread c = new TcpServerThread(s, this, id);
                 running.add(c);
                 //TcpServerThread线程名是: "H2 TCP Server (tcp://localhost:9092) thread"
-                Thread thread = new Thread(c, threadName + " thread-" + id);
+                // Thread full name
+                // System.out.println("Thread full name: "+threadName + " thread-" + id);
+                Thread thread = new Thread(c, threadName + " thread-" + id); // 创建新线程处理sql请求
                 thread.setDaemon(isDaemon);
                 c.setThread(thread);
-                thread.start();
+                thread.start(); // 新线程TcpServerThread正式运行, 初始化客户端过来的连接信息,
+                // 以及循环通过TcpServerThread.process()方法根据不同sql的请求类型（如 update、insert、select）去处理sql语句及请求
+                if(stop){
+                    System.out.println("stop: "+ stop);
+                }
+
             }
+            // 说明已经关闭了
             serverSocket = NetUtils.closeSilently(serverSocket);
         } catch (Exception e) {
             if (!stop) {

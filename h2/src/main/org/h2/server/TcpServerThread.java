@@ -113,7 +113,9 @@ public class TcpServerThread implements Runnable {
                 }
                 transfer.setVersion(clientVersion);
                 String db = transfer.readString();
+                System.out.println(" readDB "+db);
                 String originalURL = transfer.readString();
+                System.out.println(" originalURl " + originalURL);
                 if (db == null && originalURL == null) {
                     String targetSessionId = transfer.readString();
                     int command = transfer.readInt();
@@ -184,6 +186,7 @@ public class TcpServerThread implements Runnable {
                 session = Engine.createSession(ci);
                 transfer.setSession(session);
                 //每建立一个新的Session对象时，把它保存到内存数据库management_db_9092的SESSIONS表
+                System.out.println("originalURL:"+originalURL);
                 server.addConnection(threadId, originalURL, ci.getUserName());
                 trace("Connected");
                 lastRemoteSettingsId = session.getDatabase().getRemoteSettingsId();
